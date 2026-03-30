@@ -1,16 +1,45 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from 'react';
+import { Navbar } from '@/shared/components/Navbar';
+import { ProductGrid } from '@/features/products/components/ProductGrid';
+import { logPageView } from '@/shared/lib/observability';
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  useEffect(() => {
+    logPageView('home');
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen bg-background">
+      <Navbar />
+
+      {/* Hero */}
+      <section className="relative h-[40vh] min-h-[320px] overflow-hidden">
+        <img
+          src="/images/hero-coffee.jpg"
+          alt="Specialty coffee beans"
+          className="h-full w-full object-cover"
+          width={1920}
+          height={800}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-8">
+          <div className="container">
+            <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
+              Specialty Coffee
+            </h1>
+            <p className="mt-2 max-w-md text-sm text-muted-foreground">
+              Carefully sourced, expertly roasted. From origin to your cup.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Products */}
+      <main className="container py-10">
+        <ProductGrid />
+      </main>
     </div>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;

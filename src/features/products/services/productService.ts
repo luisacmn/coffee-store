@@ -1,0 +1,150 @@
+import type { Product, ProductFilters, PaginatedProducts } from '../types';
+
+const MOCK_PRODUCTS: Product[] = [
+  {
+    id: '1',
+    name: 'Ethiopian Yirgacheffe',
+    description: 'Bright and complex with notes of citrus, berry, and a floral finish. Grown at high altitudes in the birthplace of coffee.',
+    price: 18.99,
+    image: '/images/coffee-1.jpg',
+    category: 'beans',
+    intensity: 3,
+    origin: 'Ethiopia',
+    weight: '250g',
+  },
+  {
+    id: '2',
+    name: 'Colombian Supremo',
+    description: 'Rich and full-bodied with caramel sweetness and a nutty undertone. A classic single-origin from the Andes.',
+    price: 16.49,
+    image: '/images/coffee-2.jpg',
+    category: 'beans',
+    intensity: 4,
+    origin: 'Colombia',
+    weight: '250g',
+  },
+  {
+    id: '3',
+    name: 'House Blend Ground',
+    description: 'Our signature blend, medium roasted for a balanced cup with chocolate and toasted almond notes.',
+    price: 14.99,
+    image: '/images/coffee-3.jpg',
+    category: 'ground',
+    intensity: 3,
+    origin: 'Blend',
+    weight: '340g',
+  },
+  {
+    id: '4',
+    name: 'Dark Roast Espresso',
+    description: 'Intense and bold with deep dark chocolate bitterness and a smoky finish. Perfect for espresso machines.',
+    price: 15.99,
+    image: '/images/coffee-4.jpg',
+    category: 'ground',
+    intensity: 5,
+    origin: 'Brazil & Indonesia',
+    weight: '340g',
+  },
+  {
+    id: '5',
+    name: 'Morning Light Capsules',
+    description: 'A gentle wake-up blend with honey sweetness and mild citrus acidity. Compatible with Nespresso® machines.',
+    price: 12.99,
+    image: '/images/coffee-5.jpg',
+    category: 'capsules',
+    intensity: 2,
+    origin: 'Guatemala',
+    weight: '10 capsules',
+  },
+  {
+    id: '6',
+    name: 'Ristretto Capsules',
+    description: 'Concentrated and powerful with a velvety crema. A short, intense shot for true espresso lovers.',
+    price: 13.99,
+    image: '/images/coffee-6.jpg',
+    category: 'capsules',
+    intensity: 5,
+    origin: 'Italy Blend',
+    weight: '10 capsules',
+  },
+  {
+    id: '7',
+    name: 'Sumatra Mandheling',
+    description: 'Earthy and full-bodied with herbal notes and low acidity. A distinctive Indonesian single-origin.',
+    price: 19.49,
+    image: '/images/coffee-7.jpg',
+    category: 'beans',
+    intensity: 4,
+    origin: 'Indonesia',
+    weight: '250g',
+  },
+  {
+    id: '8',
+    name: 'Decaf Swiss Water',
+    description: 'All the flavor, none of the caffeine. Naturally decaffeinated using the Swiss Water Process.',
+    price: 17.99,
+    image: '/images/coffee-8.jpg',
+    category: 'ground',
+    intensity: 2,
+    origin: 'Mexico',
+    weight: '340g',
+  },
+  {
+    id: '9',
+    name: 'Lungo Capsules',
+    description: 'A longer, smoother extraction with balanced sweetness and light body. Perfect for a leisurely morning.',
+    price: 11.99,
+    image: '/images/coffee-9.jpg',
+    category: 'capsules',
+    intensity: 1,
+    origin: 'Costa Rica',
+    weight: '10 capsules',
+  },
+];
+
+function delay(ms = 300): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function fetchProducts(
+  filters?: ProductFilters,
+  page = 1,
+  pageSize = 6
+): Promise<PaginatedProducts> {
+  await delay();
+
+  let filtered = [...MOCK_PRODUCTS];
+
+  if (filters?.category) {
+    filtered = filtered.filter((p) => p.category === filters.category);
+  }
+  if (filters?.intensity) {
+    filtered = filtered.filter((p) => p.intensity === filters.intensity);
+  }
+  if (filters?.priceMin !== undefined) {
+    filtered = filtered.filter((p) => p.price >= filters.priceMin!);
+  }
+  if (filters?.priceMax !== undefined) {
+    filtered = filtered.filter((p) => p.price <= filters.priceMax!);
+  }
+  if (filters?.search) {
+    const q = filters.search.toLowerCase();
+    filtered = filtered.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.origin.toLowerCase().includes(q)
+    );
+  }
+
+  const total = filtered.length;
+  const start = (page - 1) * pageSize;
+  const products = filtered.slice(start, start + pageSize);
+
+  return { products, total, page, pageSize };
+}
+
+export async function fetchProductById(id: string): Promise<Product | null> {
+  await delay(200);
+  return MOCK_PRODUCTS.find((p) => p.id === id) ?? null;
+}
