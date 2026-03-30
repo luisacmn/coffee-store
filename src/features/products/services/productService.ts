@@ -44,6 +44,7 @@ const MOCK_PRODUCTS: Product[] = [
     intensity: 5,
     origin: 'Brazil & Indonesia',
     weight: '340g',
+    region: 'brazil',
   },
   {
     id: '5',
@@ -100,6 +101,32 @@ const MOCK_PRODUCTS: Product[] = [
     origin: 'Costa Rica',
     weight: '10 capsules',
   },
+  {
+    id: '10',
+    name: 'Sul de Minas',
+    description:
+      'Chocolate-forward with mild fruit and a creamy body. A classic Brazilian profile from high-altitude farms in southern Minas Gerais.',
+    price: 17.49,
+    image: '/images/coffee-4.jpg',
+    category: 'beans',
+    intensity: 3,
+    origin: 'Brazil',
+    weight: '250g',
+    region: 'brazil',
+  },
+  {
+    id: '11',
+    name: 'Cerrado Honey',
+    description:
+      'Sweet and balanced with caramel, hazelnut, and a soft citrus lift. Honey-processed beans from the Cerrado plateau.',
+    price: 18.25,
+    image: '/images/coffee-2.jpg',
+    category: 'beans',
+    intensity: 3,
+    origin: 'Brazil',
+    weight: '250g',
+    region: 'brazil',
+  },
 ];
 
 function delay(ms = 300): Promise<void> {
@@ -117,6 +144,9 @@ export async function fetchProducts(
 
   if (filters?.category) {
     filtered = filtered.filter((p) => p.category === filters.category);
+  }
+  if (filters?.region) {
+    filtered = filtered.filter((p) => p.region === filters.region);
   }
   if (filters?.intensity) {
     filtered = filtered.filter((p) => p.intensity === filters.intensity);

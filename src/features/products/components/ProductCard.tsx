@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import type { Product } from '@/features/products/types';
+import { PRODUCT_CATEGORY_LABELS, type Product } from '@/features/products/types';
 import { IntensityDots } from '@/shared/components/IntensityDots';
 
 interface ProductCardProps {
@@ -28,7 +28,9 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className="text-sm font-medium">${product.price.toFixed(2)}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs capitalize text-muted-foreground">{product.category} · {product.weight}</span>
+          <span className="text-xs text-muted-foreground">
+            {PRODUCT_CATEGORY_LABELS[product.category]} · {product.weight}
+          </span>
           <IntensityDots intensity={product.intensity} />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProduct } from '@/features/products/hooks/useProducts';
+import { PRODUCT_CATEGORY_LABELS } from '@/features/products/types';
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { Navbar } from '@/shared/components/Navbar';
 import { IntensityDots } from '@/shared/components/IntensityDots';
@@ -55,7 +56,7 @@ const ProductDetail = () => {
 
           <div className="flex flex-col justify-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {product.category} · {product.origin}
+              {PRODUCT_CATEGORY_LABELS[product.category]} · {product.origin}
             </span>
             <h1 className="mt-2 font-display text-3xl font-semibold">{product.name}</h1>
             <p className="mt-1 text-2xl font-medium">${product.price.toFixed(2)}</p>

@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import type { ProductCategory, ProductFilters } from '@/features/products/types';
+import {
+  PRODUCT_CATEGORY_LABELS,
+  PRODUCT_REGION_LABELS,
+  type ProductCategory,
+  type ProductFilters,
+  type ProductRegion,
+} from '@/features/products/types';
 import { Search, X } from 'lucide-react';
 
 interface FilterSidebarProps {
@@ -7,11 +13,19 @@ interface FilterSidebarProps {
   onChange: (filters: ProductFilters) => void;
 }
 
-const CATEGORIES: { value: ProductCategory; label: string }[] = [
-  { value: 'beans', label: 'Whole Beans' },
-  { value: 'ground', label: 'Ground' },
-  { value: 'capsules', label: 'Capsules' },
-];
+const CATEGORY_ORDER: ProductCategory[] = ['beans', 'ground', 'capsules'];
+
+const CATEGORIES: { value: ProductCategory; label: string }[] = CATEGORY_ORDER.map((value) => ({
+  value,
+  label: PRODUCT_CATEGORY_LABELS[value],
+}));
+
+const REGION_ORDER: ProductRegion[] = ['brazil'];
+
+const REGIONS: { value: ProductRegion; label: string }[] = REGION_ORDER.map((value) => ({
+  value,
+  label: PRODUCT_REGION_LABELS[value],
+}));
 
 export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
   const [search, setSearch] = useState(filters.search ?? '');
@@ -25,11 +39,16 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
     onChange({ ...filters, category: filters.category === cat ? undefined : cat });
   };
 
+  const handleRegion = (region: ProductRegion | undefined) => {
+    onChange({ ...filters, region: filters.region === region ? undefined : region });
+  };
+
   const handleIntensity = (level: number | undefined) => {
     onChange({ ...filters, intensity: filters.intensity === level ? undefined : level });
   };
 
-  const hasActiveFilters = filters.category || filters.intensity || filters.search;
+  const hasActiveFilters =
+    filters.category || filters.region || filters.intensity || filters.search;
 
   return (
     <aside className="space-y-6">
@@ -60,6 +79,28 @@ export function FilterSidebar({ filters, onChange }: FilterSidebarProps) {
               }`}
             >
               {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Region
+        </h4>
+        <div className="flex flex-wrap gap-2">
+          {REGIONS.map((r) => (
+            <button
+              key={r.value}
+              type="button"
+              onClick={() => handleRegion(r.value)}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                filters.region === r.value
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {r.label}
             </button>
           ))}
         </div>
