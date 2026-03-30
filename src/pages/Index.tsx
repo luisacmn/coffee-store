@@ -12,30 +12,26 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative h-[40vh] min-h-[320px] overflow-hidden">
-        <img
-          src="/images/hero-coffee.jpg"
-          alt="Specialty coffee beans"
-          className="h-full w-full object-cover"
-          width={1920}
-          height={800}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <div className="container">
-            <h1 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
-              Specialty Coffee
-            </h1>
-            <p className="mt-2 max-w-md text-sm text-muted-foreground">
-              Carefully sourced, expertly roasted. From origin to your cup.
-            </p>
-          </div>
-        </div>
+      {/* Hero — typography only */}
+      <section className="container py-16 md:py-24">
+        <h1 className="font-display text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl">
+          Coffee,
+          <br />
+          <span className="text-accent">refined.</span>
+        </h1>
+        <p className="mt-4 max-w-sm text-sm text-muted-foreground md:text-base">
+          Single-origin beans, expertly roasted.
+          <br />
+          Nothing more, nothing less.
+        </p>
       </section>
 
+      <div className="container mb-10">
+        <div className="h-px w-full bg-border" />
+      </div>
+
       {/* Products */}
-      <main className="container py-10">
+      <main className="container pb-16">
         <ProductGrid />
       </main>
     </div>
