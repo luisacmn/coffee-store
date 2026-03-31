@@ -1,8 +1,8 @@
 import cors from 'cors';
 import express from 'express';
-import { errorHandler } from './middlewares/errorHandler';
-import { healthRoutes } from './routes/healthRoutes';
-import { productRoutes } from './routes/productRoutes';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { healthRoutes } from './routes/healthRoutes.js';
+import { productRoutes } from './routes/productRoutes.js';
 
 export function createApp() {
   const app = express();

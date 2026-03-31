@@ -1,6 +1,6 @@
-import { prisma } from '../db/prisma';
-import { PRODUCTS } from '../data/products';
-import type { PaginatedProducts, Product, ProductFilters } from '../types';
+import { prisma } from '../db/prisma.js';
+import { PRODUCTS } from '../data/products.js';
+import type { PaginatedProducts, Product, ProductFilters } from '../types.js';
 
 export async function seedProductsIfEmpty(): Promise<void> {
   const count = await prisma.product.count();

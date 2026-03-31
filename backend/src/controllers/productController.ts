@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { parseProductsQuery } from '../schemas/productSchemas';
-import { getProductById, listProducts } from '../repositories/productRepository';
+import { parseProductsQuery } from '../schemas/productSchemas.js';
+import { getProductById, listProducts } from '../repositories/productRepository.js';
 
 export async function getProductsController(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {

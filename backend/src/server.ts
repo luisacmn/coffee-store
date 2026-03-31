@@ -1,5 +1,5 @@
-import { createApp } from './app';
-import { seedProductsIfEmpty } from './repositories/productRepository';
+import { createApp } from './app.js';
+import { seedProductsIfEmpty } from './repositories/productRepository.js';
 
 const app = createApp();
 const port = Number(process.env.PORT ?? 3333);

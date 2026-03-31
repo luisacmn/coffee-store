@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ProductFilters } from '../types';
+import type { ProductFilters } from '../types.js';
 
 const productCategorySchema = z.enum(['beans', 'ground', 'capsules']);
 const productRegionSchema = z.enum(['brazil']);
