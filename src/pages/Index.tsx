@@ -14,14 +14,14 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero — full-width photo; cup scaled down (origin right) so it doesn’t dominate */}
-      <section className="relative isolate min-h-[min(44vh,380px)] w-full overflow-hidden border-b border-border/40 bg-background md:min-h-[min(50vh,480px)]">
+      {/* Hero background image */}
+      <section className="relative isolate min-h-[min(44vh,380px)] w-full overflow-hidden border-b border-border/40 bg-background md:min-h-[min(50vh,480px)] ">
         <img
-          src="/images/hero-banner-cup.png"
-          alt="Steaming cup of black coffee on a white background"
-          width={1920}
-          height={640}
-          className="absolute inset-0 h-full w-full origin-[86%_52%] scale-[0.48] object-cover object-left sm:scale-[0.54] md:origin-[84%_50%] md:scale-[0.58] lg:scale-[0.62]"
+          src="/images/hero-background-cup.png"
+          alt="Cup of black coffee on a minimal background"
+          width={970}
+          height={679}
+          className="absolute inset-0 h-full w-full object-cover object-[90%_72%] md:object-[92%_72%]  md:translate-x-[14%]"
           loading="eager"
           decoding="async"
           fetchPriority="high"
