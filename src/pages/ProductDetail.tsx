@@ -7,6 +7,7 @@ import { Navbar } from '@/shared/components/Navbar';
 import { IntensityDots } from '@/shared/components/IntensityDots';
 import { LoadingSpinner } from '@/shared/components/LoadingSkeleton';
 import { ErrorState } from '@/shared/components/ErrorState';
+import { logEvent } from '@/shared/lib/observability';
 import { ArrowLeft, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -21,6 +22,11 @@ const ProductDetail = () => {
   if (!product) return <div className="min-h-screen bg-background"><Navbar /><div className="container py-10"><ErrorState message="Product not found" /></div></div>;
 
   const handleAddToCart = () => {
+    logEvent('add_to_cart_clicked', {
+      productId: product.id,
+      quantity,
+      price: product.price,
+    });
     addItem(
       { productId: product.id, name: product.name, price: product.price, image: product.image },
       quantity

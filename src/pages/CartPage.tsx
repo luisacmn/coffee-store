@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Navbar } from '@/shared/components/Navbar';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { useCartStore } from '@/features/cart/store/cartStore';
+import { logEvent } from '@/shared/lib/observability';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 const CartPage = () => {
@@ -101,6 +102,13 @@ const CartPage = () => {
               </div>
               <Link
                 to="/checkout"
+                onClick={() =>
+                  logEvent('checkout_entry_clicked', {
+                    source: 'cart',
+                    itemsCount: items.length,
+                    total,
+                  })
+                }
                 className="mt-6 flex w-full items-center justify-center rounded-md bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Proceed to Checkout

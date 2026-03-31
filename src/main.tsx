@@ -2,9 +2,12 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { initSentry, initWebVitals } from "@/shared/lib/observability";
+import { getCurrentUserId, getOrCreateSessionId } from "@/shared/lib/observability/identity";
 import {createRoutesFromChildren, matchRoutes, Routes, useLocation, useNavigationType} from 'react-router-dom'
 import { getWebInstrumentations, initializeFaro, ReactIntegration, ReactRouterVersion } from '@grafana/faro-react';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
+
+getOrCreateSessionId();
 
   initializeFaro({
     url: 'https://faro-collector-prod-sa-east-1.grafana.net/collect/5468584de04ad12827c9f3258f94a7aa',
@@ -13,6 +16,12 @@ import { TracingInstrumentation } from '@grafana/faro-web-tracing';
       version: import.meta.env.VITE_APP_VERSION ?? '1.0.0',
       environment: import.meta.env.MODE
     },
+    metas: [
+      () => ({
+        session: { id: getOrCreateSessionId() },
+        user: getCurrentUserId() ? { id: getCurrentUserId() } : undefined,
+      }),
+    ],
     
     instrumentations: [
       // Mandatory, omits default instrumentations otherwise.

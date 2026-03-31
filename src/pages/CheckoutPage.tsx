@@ -4,6 +4,7 @@ import { Navbar } from '@/shared/components/Navbar';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { submitCheckout } from '@/features/cart/services/cartService';
+import { logError, logEvent } from '@/shared/lib/observability';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 
 const CheckoutPage = () => {
@@ -61,14 +62,31 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    logEvent('checkout_submit_clicked', {
+      itemsCount: items.length,
+      total,
+      hasName: Boolean(name.trim()),
+      hasEmail: Boolean(email.trim()),
+    });
     setSubmitting(true);
     try {
       const result = await submitCheckout(
         { name, email },
         items.map((i) => ({ productId: i.productId, quantity: i.quantity }))
       );
+      logEvent('checkout_submit_succeeded', {
+        itemsCount: items.length,
+        total,
+        orderId: result.orderId,
+      });
       setOrderId(result.orderId);
       clearCart();
+    } catch (error) {
+      logEvent('checkout_submit_failed', {
+        itemsCount: items.length,
+        total,
+      });
+      logError(error, { flow: 'checkout_submit' });
     } finally {
       setSubmitting(false);
     }
