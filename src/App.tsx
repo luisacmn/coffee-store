@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route } from "react-router-dom";
 import { FaroRoutes } from "@grafana/faro-react";
@@ -9,11 +10,11 @@ import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import CartPage from "./pages/CartPage.tsx";
 import CheckoutPage from "./pages/CheckoutPage.tsx";
-import DashboardPage from "./pages/DashboardPage.tsx";
-import SupportStressPage from "./pages/SupportStressPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
+const DashboardPage = lazy(() => import("./pages/DashboardPage.tsx"));
+const SupportStressPage = lazy(() => import("./pages/SupportStressPage.tsx"));
 
 const App = () => (
   <Sentry.ErrorBoundary fallback={sentryErrorFallback} showDialog={false}>
@@ -23,15 +24,17 @@ const App = () => (
         <BrowserRouter>
           <SentryRouteSync />
           <RouteChangeTracker />
-          <FaroRoutes>
-            <Route path="/" element={<Index />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/support" element={<SupportStressPage />} />
-            <Route path="*" element={<NotFound />} />
-          </FaroRoutes>
+          <Suspense fallback={<div className="container py-10 text-sm text-muted-foreground">Loading page...</div>}>
+            <FaroRoutes>
+              <Route path="/" element={<Index />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/support" element={<SupportStressPage />} />
+              <Route path="*" element={<NotFound />} />
+            </FaroRoutes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
