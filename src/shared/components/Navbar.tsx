@@ -18,6 +18,12 @@ export function Navbar() {
           <Link to="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             Shop
           </Link>
+          <Link to="/dashboard" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+            Dashboard
+          </Link>
+          <Link to="/support" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+            Support
+          </Link>
           <Link to="/cart" className="relative flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             <ShoppingBag className="h-5 w-5" />
             {itemCount > 0 && (
@@ -42,6 +48,12 @@ export function Navbar() {
           <div className="flex flex-col gap-4">
             <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium">
               Shop
+            </Link>
+            <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="text-sm font-medium">
+              Dashboard
+            </Link>
+            <Link to="/support" onClick={() => setMobileOpen(false)} className="text-sm font-medium">
+              Support
             </Link>
             <Link to="/cart" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm font-medium">
               <ShoppingBag className="h-4 w-4" />

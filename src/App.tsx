@@ -9,6 +9,8 @@ import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import CartPage from "./pages/CartPage.tsx";
 import CheckoutPage from "./pages/CheckoutPage.tsx";
+import DashboardPage from "./pages/DashboardPage.tsx";
+import SupportStressPage from "./pages/SupportStressPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,9 @@ const App = () => (
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/support" element={<SupportStressPage />} />
+            <Route path="/atendimento" element={<SupportStressPage />} />
             <Route path="*" element={<NotFound />} />
           </FaroRoutes>
         </BrowserRouter>

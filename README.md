@@ -56,6 +56,14 @@ To detect "user clicked but flow did not continue":
 - `checkout_submit_succeeded`
 - `checkout_submit_failed`
 
+In addition, Faro User Actions automatic instrumentation is enabled via
+`data-faro-user-action-name` on critical controls:
+
+- `shop-now-clicked`
+- `add-to-cart`
+- `proceed-to-checkout`
+- `place-order`
+
 ### 4) Session and user context
 
 Faro metadata includes:
@@ -100,6 +108,32 @@ Frontend runs on `http://localhost:8080`.
    - inspect web vitals over the same time window
 4. In Sentry:
    - confirm frontend exceptions are captured with context.
+
+## In-App Dashboard
+
+The app includes a first-party telemetry dashboard at `/dashboard` that reads real
+structured observability records emitted by the frontend runtime (no mock data).
+
+It summarizes:
+
+- sessions
+- JS exceptions
+- API error count and average latency
+- checkout funnel (`add to cart -> checkout -> submit -> success`)
+- web vitals averages (`LCP`, `INP`, `CLS`)
+
+## Observability Stress Test Page
+
+Use `/support` to intentionally generate problematic telemetry and validate
+monitoring behavior.
+
+This page can trigger:
+
+- slow main-thread interaction
+- failing HTTP request
+- burst user-action events
+- intentional uncaught JavaScript error
+- delayed layout insertion to provoke CLS
 
 ## Why This Matters
 

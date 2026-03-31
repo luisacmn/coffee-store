@@ -35,6 +35,7 @@ const Index = () => {
             <Link
               to="/#products"
               onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+              data-faro-user-action-name="shop-now-clicked"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:gap-3 hover:bg-primary/90"
             >
               Shop Now

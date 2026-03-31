@@ -125,6 +125,7 @@ const CheckoutPage = () => {
             <button
               type="submit"
               disabled={submitting}
+              data-faro-user-action-name="place-order"
               className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               {submitting ? (

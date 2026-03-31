@@ -109,6 +109,7 @@ const CartPage = () => {
                     total,
                   })
                 }
+                data-faro-user-action-name="proceed-to-checkout"
                 className="mt-6 flex w-full items-center justify-center rounded-md bg-primary py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Proceed to Checkout

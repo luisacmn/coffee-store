@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/react';
 import type { Metric } from 'web-vitals';
+import { getCurrentUserId, getOrCreateSessionId } from './identity';
+import { appendRecord } from './store';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -30,6 +32,12 @@ function baseRecord(
   message: string,
   context?: Record<string, unknown>
 ): StructuredLogRecord {
+  const enrichedContext = {
+    session_id: getOrCreateSessionId(),
+    user_id: getCurrentUserId(),
+    ...(context ?? {}),
+  };
+
   return {
     ts: new Date().toISOString(),
     level,
@@ -37,11 +45,13 @@ function baseRecord(
     env,
     type,
     message,
-    ...(context && Object.keys(context).length > 0 ? { context } : {}),
+    ...(Object.keys(enrichedContext).length > 0 ? { context: enrichedContext } : {}),
   };
 }
 
 function write(record: StructuredLogRecord): void {
+  appendRecord(record);
+
   if (import.meta.env.DEV) {
     const { level, type, message, context } = record;
     const style =
