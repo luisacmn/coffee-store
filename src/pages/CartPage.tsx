@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@/shared/components/Navbar';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { useCartStore } from '@/features/cart/store/cartStore';
-import { logPageView } from '@/shared/lib/observability';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 
 const CartPage = () => {
@@ -11,10 +9,6 @@ const CartPage = () => {
   const total = useCartStore((s) => s.total());
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
-
-  useEffect(() => {
-    logPageView('cart');
-  }, []);
 
   return (
     <div className="min-h-screen bg-background">

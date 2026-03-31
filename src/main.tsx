@@ -9,9 +9,9 @@ import { TracingInstrumentation } from '@grafana/faro-web-tracing';
   initializeFaro({
     url: 'https://faro-collector-prod-sa-east-1.grafana.net/collect/5468584de04ad12827c9f3258f94a7aa',
     app: {
-      name: 'o11y-ecommerce',
-      version: '1.0.0',
-      environment: 'production'
+      name: import.meta.env.VITE_APP_NAME ?? 'o11y-ecommerce',
+      version: import.meta.env.VITE_APP_VERSION ?? '1.0.0',
+      environment: import.meta.env.MODE
     },
     
     instrumentations: [

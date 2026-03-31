@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProduct } from '@/features/products/hooks/useProducts';
 import { PRODUCT_CATEGORY_LABELS } from '@/features/products/types';
@@ -7,7 +7,6 @@ import { Navbar } from '@/shared/components/Navbar';
 import { IntensityDots } from '@/shared/components/IntensityDots';
 import { LoadingSpinner } from '@/shared/components/LoadingSkeleton';
 import { ErrorState } from '@/shared/components/ErrorState';
-import { logPageView } from '@/shared/lib/observability';
 import { ArrowLeft, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -16,10 +15,6 @@ const ProductDetail = () => {
   const { data: product, isLoading, isError, refetch } = useProduct(id!);
   const addItem = useCartStore((s) => s.addItem);
   const [quantity, setQuantity] = useState(1);
-
-  useEffect(() => {
-    logPageView('product_detail');
-  }, []);
 
   if (isLoading) return <div className="min-h-screen bg-background"><Navbar /><LoadingSpinner /></div>;
   if (isError) return <div className="min-h-screen bg-background"><Navbar /><div className="container py-10"><ErrorState onRetry={() => refetch()} /></div></div>;

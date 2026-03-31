@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@/shared/components/Navbar';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { submitCheckout } from '@/features/cart/services/cartService';
-import { logPageView } from '@/shared/lib/observability';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 
 const CheckoutPage = () => {
@@ -16,10 +15,6 @@ const CheckoutPage = () => {
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
-
-  useEffect(() => {
-    logPageView('checkout');
-  }, []);
 
   if (orderId) {
     return (

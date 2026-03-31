@@ -1,15 +1,9 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar } from '@/shared/components/Navbar';
 import { ProductGrid } from '@/features/products/components/ProductGrid';
-import { logPageView } from '@/shared/lib/observability';
 import { ArrowRight } from 'lucide-react';
 
 const Index = () => {
-  useEffect(() => {
-    logPageView('home');
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

@@ -13,3 +13,4 @@ export { initWebVitals } from './webVitals';
 export { initSentry } from './sentry';
 export { sentryErrorFallback } from './SentryErrorFallback';
 export { SentryRouteSync } from './SentryRouteSync';
+export { RouteChangeTracker } from './RouteChangeTracker';

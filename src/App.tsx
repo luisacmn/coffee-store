@@ -4,7 +4,7 @@ import { FaroRoutes } from "@grafana/faro-react";
 import * as Sentry from "@sentry/react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { sentryErrorFallback, SentryRouteSync } from "@/shared/lib/observability";
+import { RouteChangeTracker, sentryErrorFallback, SentryRouteSync } from "@/shared/lib/observability";
 import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import CartPage from "./pages/CartPage.tsx";
@@ -20,6 +20,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <SentryRouteSync />
+          <RouteChangeTracker />
           <FaroRoutes>
             <Route path="/" element={<Index />} />
             <Route path="/product/:id" element={<ProductDetail />} />

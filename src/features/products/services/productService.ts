@@ -1,4 +1,5 @@
 import type { Product, ProductFilters, PaginatedProducts } from '../types';
+import { logError, logEvent } from '@/shared/lib/observability';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3333/api';
 
 function buildProductsUrl(filters?: ProductFilters, page = 1, pageSize = 6): string {
@@ -22,20 +23,70 @@ export async function fetchProducts(
   page = 1,
   pageSize = 6
 ): Promise<PaginatedProducts> {
-  const response = await fetch(buildProductsUrl(filters, page, pageSize));
-  if (!response.ok) {
-    throw new Error('Failed to fetch products');
+  const url = buildProductsUrl(filters, page, pageSize);
+  const startedAt = performance.now();
+
+  try {
+    const response = await fetch(url);
+    const durationMs = Math.round(performance.now() - startedAt);
+
+    if (!response.ok) {
+      logEvent('api_products_failed', {
+        endpoint: '/products',
+        status: response.status,
+        durationMs,
+      });
+      throw new Error('Failed to fetch products');
+    }
+
+    logEvent('api_products_ok', {
+      endpoint: '/products',
+      status: response.status,
+      durationMs,
+    });
+
+    return (await response.json()) as PaginatedProducts;
+  } catch (error) {
+    logError(error, { endpoint: '/products', url });
+    throw error;
   }
-  return (await response.json()) as PaginatedProducts;
 }
 
 export async function fetchProductById(id: string): Promise<Product | null> {
-  const response = await fetch(`${API_BASE_URL}/products/${id}`);
-  if (response.status === 404) {
-    return null;
+  const url = `${API_BASE_URL}/products/${id}`;
+  const startedAt = performance.now();
+
+  try {
+    const response = await fetch(url);
+    const durationMs = Math.round(performance.now() - startedAt);
+
+    if (response.status === 404) {
+      logEvent('api_product_not_found', {
+        endpoint: '/products/:id',
+        status: response.status,
+        durationMs,
+      });
+      return null;
+    }
+
+    if (!response.ok) {
+      logEvent('api_product_failed', {
+        endpoint: '/products/:id',
+        status: response.status,
+        durationMs,
+      });
+      throw new Error('Failed to fetch product');
+    }
+
+    logEvent('api_product_ok', {
+      endpoint: '/products/:id',
+      status: response.status,
+      durationMs,
+    });
+
+    return (await response.json()) as Product;
+  } catch (error) {
+    logError(error, { endpoint: '/products/:id', url, productId: id });
+    throw error;
   }
-  if (!response.ok) {
-    throw new Error('Failed to fetch product');
-  }
-  return (await response.json()) as Product;
 }
