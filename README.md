@@ -1,4 +1,4 @@
-# Ecommerce Store
+# Coffee Store
 
 Frontend-first ecommerce app with observability instrumentation using Grafana Faro and Sentry.
 
