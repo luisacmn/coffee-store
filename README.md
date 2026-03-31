@@ -145,3 +145,16 @@ Light abuse protection is enabled on this page (max 5 stress actions every 10 se
 - Real user flow visibility in SPA navigation
 - Better debugging for "clicked but nothing happened" cases
 - Measurable UX performance using web vitals and API latency
+
+## Go-Live Checklist
+
+Before publishing, confirm:
+
+- `VITE_API_BASE_URL` points to your production backend
+- `VITE_FARO_URL` is configured in production environment
+- `VITE_SENTRY_DSN` is configured (optional but recommended)
+- `DATABASE_URL` is set with your Supabase Postgres connection
+- `CORS_ORIGIN` matches your deployed frontend URL
+- frontend build passes: `npm run build`
+- backend build passes: `npm run build:backend`
+- `/dashboard` and `/support` are reachable and telemetry is visible in Grafana
