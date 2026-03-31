@@ -32,9 +32,13 @@ function baseRecord(
   message: string,
   context?: Record<string, unknown>
 ): StructuredLogRecord {
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : undefined;
+
   const enrichedContext = {
     session_id: getOrCreateSessionId(),
     user_id: getCurrentUserId(),
+    path: currentPath,
+    route: currentPath,
     ...(context ?? {}),
   };
 

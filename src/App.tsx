@@ -30,7 +30,6 @@ const App = () => (
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/support" element={<SupportStressPage />} />
-            <Route path="/atendimento" element={<SupportStressPage />} />
             <Route path="*" element={<NotFound />} />
           </FaroRoutes>
         </BrowserRouter>

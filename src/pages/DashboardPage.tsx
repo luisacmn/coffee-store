@@ -61,6 +61,107 @@ export default function DashboardPage() {
         .filter((sessionId) => sessionId.length > 0),
     );
 
+    const routeMap = new Map<
+      string,
+      { exceptions: number; apiErrors: number; apiLatencyTotal: number; apiLatencyCount: number; inpTotal: number; inpCount: number; lcpTotal: number; lcpCount: number; clsTotal: number; clsCount: number }
+    >();
+
+    const ensureRoute = (routeName: string) => {
+      if (!routeMap.has(routeName)) {
+        routeMap.set(routeName, {
+          exceptions: 0,
+          apiErrors: 0,
+          apiLatencyTotal: 0,
+          apiLatencyCount: 0,
+          inpTotal: 0,
+          inpCount: 0,
+          lcpTotal: 0,
+          lcpCount: 0,
+          clsTotal: 0,
+          clsCount: 0,
+        });
+      }
+      return routeMap.get(routeName)!;
+    };
+
+    for (const record of filteredRecords) {
+      const route = String(record.context?.path ?? record.context?.route ?? record.context?.endpoint ?? 'unknown');
+      const routeStats = ensureRoute(route);
+
+      if (record.type === 'exception') {
+        routeStats.exceptions += 1;
+      }
+
+      if (record.type === 'event') {
+        const eventName = String(record.context?.event ?? '');
+        const durationMs = Number(record.context?.durationMs ?? 0);
+
+        if (
+          eventName === 'api_products_failed' ||
+          eventName === 'api_product_failed' ||
+          eventName === 'support_failing_request_failed'
+        ) {
+          routeStats.apiErrors += 1;
+        }
+
+        if (
+          (eventName === 'api_products_ok' || eventName === 'api_product_ok') &&
+          Number.isFinite(durationMs) &&
+          durationMs > 0
+        ) {
+          routeStats.apiLatencyTotal += durationMs;
+          routeStats.apiLatencyCount += 1;
+        }
+      }
+
+      if (record.type === 'web_vital') {
+        const metricName = String(record.context?.name ?? '');
+        const value = Number(record.context?.value ?? 0);
+        if (!Number.isFinite(value)) continue;
+
+        if (metricName === 'INP') {
+          routeStats.inpTotal += value;
+          routeStats.inpCount += 1;
+        } else if (metricName === 'LCP') {
+          routeStats.lcpTotal += value;
+          routeStats.lcpCount += 1;
+        } else if (metricName === 'CLS') {
+          routeStats.clsTotal += value;
+          routeStats.clsCount += 1;
+        }
+      }
+    }
+
+    const problematicRoutes = Array.from(routeMap.entries())
+      .map(([route, stats]) => {
+        const avgApiLatency = stats.apiLatencyCount > 0 ? stats.apiLatencyTotal / stats.apiLatencyCount : 0;
+        const avgInp = stats.inpCount > 0 ? stats.inpTotal / stats.inpCount : 0;
+        const avgLcp = stats.lcpCount > 0 ? stats.lcpTotal / stats.lcpCount : 0;
+        const avgCls = stats.clsCount > 0 ? stats.clsTotal / stats.clsCount : 0;
+
+        // Weighted score for quick ranking (higher = more problematic).
+        const score =
+          stats.exceptions * 100 +
+          stats.apiErrors * 60 +
+          Math.min(avgApiLatency / 10, 60) +
+          Math.min(avgInp / 5, 60) +
+          Math.min(avgLcp / 50, 60) +
+          Math.min(avgCls * 1000, 60);
+
+        return {
+          route,
+          exceptions: stats.exceptions,
+          apiErrors: stats.apiErrors,
+          avgApiLatency,
+          avgInp,
+          avgLcp,
+          avgCls,
+          score,
+        };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+
     return {
       addToCart,
       proceedCheckout,
@@ -74,6 +175,7 @@ export default function DashboardPage() {
       lcp: metricValue(filteredRecords, 'LCP'),
       inp: metricValue(filteredRecords, 'INP'),
       cls: metricValue(filteredRecords, 'CLS'),
+      problematicRoutes,
     };
   }, [filteredRecords]);
 
@@ -238,6 +340,44 @@ export default function DashboardPage() {
             </button>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">{insightText[insightTab]}</p>
+        </section>
+
+        <section className="mt-6 rounded-lg border border-border p-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Most Problematic Routes</h2>
+          {data.problematicRoutes.length === 0 ? (
+            <p className="mt-3 text-sm text-muted-foreground">No route-level telemetry yet in the selected window.</p>
+          ) : (
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <thead className="border-b border-border text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr>
+                    <th className="px-2 py-2">Route</th>
+                    <th className="px-2 py-2">Score</th>
+                    <th className="px-2 py-2">JS Errors</th>
+                    <th className="px-2 py-2">API Errors</th>
+                    <th className="px-2 py-2">API Avg (ms)</th>
+                    <th className="px-2 py-2">INP Avg (ms)</th>
+                    <th className="px-2 py-2">LCP Avg (ms)</th>
+                    <th className="px-2 py-2">CLS Avg</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.problematicRoutes.map((row) => (
+                    <tr key={row.route} className="border-b border-border/60">
+                      <td className="px-2 py-2 font-medium">{row.route}</td>
+                      <td className="px-2 py-2">{Math.round(row.score)}</td>
+                      <td className="px-2 py-2">{row.exceptions}</td>
+                      <td className="px-2 py-2">{row.apiErrors}</td>
+                      <td className="px-2 py-2">{row.avgApiLatency ? Math.round(row.avgApiLatency) : '-'}</td>
+                      <td className="px-2 py-2">{row.avgInp ? Math.round(row.avgInp) : '-'}</td>
+                      <td className="px-2 py-2">{row.avgLcp ? Math.round(row.avgLcp) : '-'}</td>
+                      <td className="px-2 py-2">{row.avgCls ? row.avgCls.toFixed(3) : '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </main>
     </div>
