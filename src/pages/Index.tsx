@@ -24,7 +24,6 @@ const Index = () => {
           className="absolute inset-0 h-full w-full object-cover object-[90%_72%] md:object-[92%_72%]  md:translate-x-[14%]"
           loading="eager"
           decoding="async"
-          fetchPriority="high"
         />
         <div className="container relative z-10 flex min-h-[min(44vh,380px)] items-center py-10 md:min-h-[min(50vh,480px)] md:py-14">
           <div className="max-w-xl">
