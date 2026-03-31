@@ -48,6 +48,9 @@ const Index = () => {
       {/* Products */}
       <main id="products" className="container pb-16">
         <div className="mb-10 h-px w-full bg-border" />
+        <div className="mb-6 rounded-md border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+          This project includes intentional telemetry demo pages: <strong>/dashboard</strong> and <strong>/support</strong>.
+        </div>
         <ProductGrid />
       </main>
     </div>

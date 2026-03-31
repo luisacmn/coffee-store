@@ -9,8 +9,11 @@ import { TracingInstrumentation } from '@grafana/faro-web-tracing';
 
 getOrCreateSessionId();
 
+const faroUrl = import.meta.env.VITE_FARO_URL;
+
+if (faroUrl) {
   initializeFaro({
-    url: 'https://faro-collector-prod-sa-east-1.grafana.net/collect/5468584de04ad12827c9f3258f94a7aa',
+    url: faroUrl,
     app: {
       name: import.meta.env.VITE_APP_NAME ?? 'o11y-ecommerce',
       version: import.meta.env.VITE_APP_VERSION ?? '1.0.0',
@@ -45,6 +48,7 @@ getOrCreateSessionId();
       }),
     ],
   });
+}
 
 
 initSentry();

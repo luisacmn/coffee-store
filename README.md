@@ -2,6 +2,8 @@
 
 Frontend-first ecommerce app with observability instrumentation using Grafana Faro and Sentry.
 
+This project includes intentional telemetry demo pages: `/dashboard` and `/support`.
+
 ## Observability Architecture
 
 This project instruments frontend telemetry in four layers:
@@ -134,6 +136,8 @@ This page can trigger:
 - burst user-action events
 - intentional uncaught JavaScript error
 - delayed layout insertion to provoke CLS
+
+Light abuse protection is enabled on this page (max 5 stress actions every 10 seconds).
 
 ## Why This Matters
 

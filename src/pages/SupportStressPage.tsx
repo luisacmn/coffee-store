@@ -12,6 +12,20 @@ function blockMainThread(durationMs: number) {
 export default function SupportStressPage() {
   const [showLateBanner, setShowLateBanner] = useState(false);
   const [messages, setMessages] = useState<string[]>([]);
+  const [actionTimestamps, setActionTimestamps] = useState<number[]>([]);
+
+  const canRunAction = () => {
+    const now = Date.now();
+    const recent = actionTimestamps.filter((timestamp) => now - timestamp < 10_000);
+    if (recent.length >= 5) {
+      setMessages((prev) => [...prev, 'Action rate limit reached. Wait a few seconds before triggering more tests.']);
+      logEvent('support_action_rate_limited', { recentActions: recent.length, windowMs: 10000 });
+      setActionTimestamps(recent);
+      return false;
+    }
+    setActionTimestamps([...recent, now]);
+    return true;
+  };
 
   useEffect(() => {
     logEvent('support_page_opened', { testPage: true });
@@ -35,12 +49,14 @@ export default function SupportStressPage() {
   }, []);
 
   const handleSlowInteraction = () => {
+    if (!canRunAction()) return;
     logEvent('support_slow_interaction_clicked');
     blockMainThread(900);
     setMessages((prev) => [...prev, `Slow interaction executed at ${new Date().toLocaleTimeString()}`]);
   };
 
   const handleFailingRequest = async () => {
+    if (!canRunAction()) return;
     logEvent('support_failing_request_clicked');
     try {
       const response = await fetch('http://localhost:3333/api/support/tickets');
@@ -61,8 +77,9 @@ export default function SupportStressPage() {
   };
 
   const handleBurstClicks = () => {
+    if (!canRunAction()) return;
     logEvent('support_burst_clicks_clicked');
-    for (let i = 0; i < 8; i += 1) {
+    for (let i = 0; i < 4; i += 1) {
       logEvent('support_button_spam', { sequence: i + 1 });
     }
     setMessages((prev) => [...prev, `Burst click telemetry generated at ${new Date().toLocaleTimeString()}`]);
@@ -75,6 +92,9 @@ export default function SupportStressPage() {
         <h1 className="font-display text-3xl font-semibold">Customer Support (Observability Stress Test)</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           This page intentionally generates problematic signals to validate your metrics, errors, tracing, and user action pipeline.
+        </p>
+        <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
+          Light abuse protection is enabled: up to 5 stress actions every 10 seconds.
         </p>
 
         {showLateBanner && (
