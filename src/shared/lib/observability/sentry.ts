@@ -18,7 +18,7 @@ export function initSentry(): void {
     release: import.meta.env.VITE_APP_VERSION,
     sendDefaultPii: false,
     integrations: [
-      Sentry.reactRouterV6BrowserTracingIntegration({
+      Sentry.reactRouterV7BrowserTracingIntegration({
         useEffect,
         useLocation,
         useNavigationType,

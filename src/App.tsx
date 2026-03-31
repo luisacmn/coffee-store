@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
+import { FaroRoutes } from "@grafana/faro-react";
 import * as Sentry from "@sentry/react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,13 +20,13 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <SentryRouteSync />
-          <Routes>
+          <FaroRoutes>
             <Route path="/" element={<Index />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="*" element={<NotFound />} />
-          </Routes>
+          </FaroRoutes>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
