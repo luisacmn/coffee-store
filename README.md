@@ -4,6 +4,11 @@ Frontend-first ecommerce app with observability instrumentation using Grafana Fa
 
 This project includes intentional telemetry demo pages: `/dashboard` and `/support`.
 
+Url: https://coffee-store-sample.vercel.app
+
+
+![Preview](./public/images/screencapture-coffee-store-sample-vercel-app.png)
+
 ## Observability Architecture
 
 This project instruments frontend telemetry in four layers:
